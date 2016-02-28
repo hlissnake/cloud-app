@@ -1,0 +1,27 @@
+{
+  "name": "cloud-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "bacon": "0.0.1",
+    "immutable": "*",
+    "ramda": "^0.19.1",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.0",
+    "redux": "^3.3.1"
+  },
+  "devDependencies": {
+    "babel-preset-react": "^6.5.0",
+    "babel-register": "^6.5.2",
+    "express": "*",
+    "gulp": "3.x.x",
+    "gulp-babel": "^6.1.2",
+    "gulp-code": "*",
+    "gulp-react": "*",
+    "gulp-uglify": "*",
+    "gulp-webpack": "*",
+    "mongodb": "^2.1.7",
+    "mongoose": "^4.4.5",
+    "vinyl-named": "*",
+    "webpack": "*"
+  }
+}

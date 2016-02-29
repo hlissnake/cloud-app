@@ -1,3 +1,5 @@
+'use strict';
+
 var React = require('react');
 var Immutable = require('immutable');
 
@@ -6,45 +8,48 @@ var Tree = React.createClass({
 
 
 	propTypes: {
-		checked: React.PropTypes.bool
+		checked: React.PropTypes.bool.isRequired,
+		node: React.PropTypes.array.isRequired,
+		addNode: React.PropTypes.func.isRequired,
+		deleteNode: React.PropTypes.func.isRequired
 	},
 
-	getDefaultProps: function () {
+	getDefaultProps: function getDefaultProps() {
 		return {
 			checked: false
 		};
 	},
 
-	getInitialState: function () {
+	getInitialState: function getInitialState() {
 		return {
 			checked: !!this.props.checked,
 			expand: true
 		};
 	},
 
-	componentWillReceiveProps: function (nextProps) {
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		// this.props.node = Immutable.Map(this.props.node);
 		this.setState({
 			checked: nextProps.checked
 		});
 	},
 
-	shouldComponentUpdate: function (nextProps, nextState) {
+	shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
 		return this.state.checked != nextState.checked || this.props.node != nextProps.node || this.state.selected != nextState.selected || this.state.expand != nextState.expand;
 	},
 
-	componentWillMount: function () {
+	componentWillMount: function componentWillMount() {
 		// this.props.node = Immutable.Map(this.props.node);
 	},
 
-	_onExpand: function (e) {
+	_onExpand: function _onExpand(e) {
 		e.stopPropagation();
 		this.setState({
 			expand: !this.state.expand
 		});
 	},
 
-	_onCheckboxClick: function (checked) {
+	_onCheckboxClick: function _onCheckboxClick(checked) {
 
 		this.childrenCheck = checked;
 		// this.props.checkParent && this.props.checkParent(checked);
@@ -53,29 +58,29 @@ var Tree = React.createClass({
 		});
 	},
 
-	_onSelected: function () {
+	_onSelected: function _onSelected() {
 		this.setState({
 			selected: !this.state.selected
 		});
 	},
 
-	_addChild: function (e) {
+	_addChild: function _addChild(e) {
 		e.stopPropagation();
 		var text = prompt("Please enter the new node's value");
 		if (text) {
-			this.props.addNode(text, this.props.node.get('id'));
+			this.props.addNode(text, this.props.node.get('_id'));
 		}
 	},
 
-	_deleteNode: function (e) {
+	_deleteNode: function _deleteNode(e) {
 		e.stopPropagation();
 		var result = confirm("Do you really want to delete this node?");
 		if (result) {
-			this.props.deleteNode(this.props.node.get('id'));
+			this.props.deleteNode(this.props.node.get('_id'));
 		}
 	},
 
-	render: function () {
+	render: function render() {
 
 		if (this.props.node.get('invisible')) return false;
 
@@ -111,13 +116,13 @@ var Tree = React.createClass({
 			),
 			hasChildren && isOpen ? React.createElement(
 				'ul',
-				{ className: 'tree-item-children', key: this.props.node.get('id') },
+				{ className: 'tree-item-children', key: this.props.node.get('_id') },
 				childrenNodes.map(function (node, i) {
 					return React.createElement(Tree, { node: Immutable.Map(node),
 						checked: this.childrenCheck,
 						addNode: this.props.addNode,
 						deleteNode: this.props.deleteNode,
-						key: node.id });
+						key: node._id });
 				}.bind(this))
 			) : []
 		);
@@ -128,12 +133,12 @@ var CheckBox = React.createClass({
 	displayName: 'CheckBox',
 
 
-	onCheckboxClick: function (e) {
+	onCheckboxClick: function onCheckboxClick(e) {
 		e.stopPropagation();
 		this.props.onCheck && this.props.onCheck(!this.props.checked);
 	},
 
-	render: function () {
+	render: function render() {
 		return React.createElement('span', { onClick: this.onCheckboxClick,
 			className: "tree-check-icon tree-icon " + (this.props.checked ? "tree-check-icon-checked" : "tree-check-icon-unchecked")
 		});

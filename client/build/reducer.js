@@ -1,3 +1,5 @@
+'use strict';
+
 var Immutable = require('immutable');
 
 var CHANGE_EVENT = 'change';
@@ -72,46 +74,57 @@ function recursive(node, compareFn, resultFn) {
 	return resultFn(node, result, childrenInvisible);
 }
 
-var TreeReducer = function (state, action) {
+var TreeReducer = function TreeReducer(state, action) {
 
 	switch (action.type) {
 
+		case 'loading':
+			return state;
+
 		case 'create':
-			// alert('add : ' + action.content);
-			var parentNode = findNode(state, function (node) {
-				if (node.id === action.id) {
-					return node;
-				}
-			});
 
-			if (parentNode) {
-
-				var newNode = {
-					content: action.content,
+			if (action.parent_id == 0) {
+				state[state.length] = {
+					content: action.node.content,
 					checkable: true
 				};
+			} else {
+				// alert('add : ' + action.content);
+				var parentNode = findNode(state, function (node) {
+					if (node._id === action.parent_id) {
+						return node;
+					}
+				});
 
-				if (parentNode.childrenNodes) {
-					newNode.id = parentNode.id + parentNode.childrenNodes.length;
-					parentNode.childrenNodes.push(newNode);
-				} else {
-					newNode.id = parentNode.id + 0;
-					parentNode.childrenNodes = [newNode];
+				if (parentNode) {
+					var newNode = {
+						content: action.node.content,
+						_id: action.node._id,
+						checkable: true
+					};
+
+					if (parentNode.childrenNodes) {
+						newNode._id = parentNode._id + parentNode.childrenNodes.length;
+						parentNode.childrenNodes.push(newNode);
+					} else {
+						newNode._id = parentNode._id + 0;
+						parentNode.childrenNodes = [newNode];
+					}
 				}
 			}
 			return state;
 
 		case 'delete':
-			// alert('delete : ' + action.id);
+			// alert('delete : ' + action._id);
 			var currentNode = findNode(state, function (node) {
-				if (node.id === action.id) {
+				if (node._id === action._id) {
 					return node;
 				}
 			});
 			var parentNode = function () {
 				for (var i = 0; i < state.length; i++) {
 					var target = findParent(state[i], function (node) {
-						if (node.id === action.id) {
+						if (node._id === action._id) {
 							return true;
 						}
 					});

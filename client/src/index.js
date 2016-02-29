@@ -8,7 +8,7 @@ var TreeAction = require('./action');
 var TreeReducer = require('./reducer');
 var TreeData = require('./data');
 
-var TreeStore = Redux.createStore(TreeReducer);
+var TreeStore = Redux.createStore(TreeReducer, []);
 
 var App = React.createClass({
 
@@ -16,10 +16,6 @@ var App = React.createClass({
 		return {
 			nodes : []
 		}
-	},
-
-	filterKeyword : function(e){
-		TreeStore.dispatch(TreeAction.search(e.target.value));
 	},
 
 	componentDidMount : function(){
@@ -30,6 +26,20 @@ var App = React.createClass({
 		// TreeStore.unsubscribe(this._onChange);
 	},
 
+	filterKeyword : function(e){
+		TreeStore.dispatch(TreeAction.search(e.target.value));
+	},
+
+	inputNodeName : function(e){
+		this.rootNodeName = e.target.value;
+	},
+
+	addRootNode : function(){
+		if(this.rootNodeName) {
+			this._addNode(this.rootNodeName, 0);
+		}
+	},
+
 	render : function(){
 		return (
 			<div>
@@ -37,12 +47,17 @@ var App = React.createClass({
 					<input type="text" placeholder="keyword" className="tree-keyword-search" onChange={this.filterKeyword}/>
 					<span className="tree-search-mark"></span>
 				</div>
+				<div className="tree-add">
+					<input type="text" placeholder="add new root node name" className="tree-add-node" onChange={this.inputNodeName} />
+					<button onClick={this.addRootNode}>Add Root Node</button>
+				</div>
 			{
 				this.props.nodes.map(function(node, i){
 					return (
-						<Tree node={Immutable.Map(node)} key={node.id}
+						<Tree node={Immutable.Map(node)}
 							addNode={this._addNode}
-							deleteNode={this._deleteNode} ></Tree>
+							deleteNode={this._deleteNode} 
+							key={node._id} ></Tree>
 					)
 				}.bind(this))
 			}
@@ -57,7 +72,7 @@ var App = React.createClass({
 	},
 
 	_addNode : function(content, id){
-		TreeStore.dispatch(TreeAction.create(content, id));
+		TreeStore.dispatch(TreeAction.createAsync(content, id, TreeStore));
 	},
 
 	_deleteNode : function(id){
@@ -68,8 +83,8 @@ var App = React.createClass({
 TreeStore.subscribe(render);
 
 // Mocking for API request
-TreeData.load(function(data){
-	TreeStore.dispatch(TreeAction.load(data))
+TreeData.load(function(res){
+	res.succ && TreeStore.dispatch(TreeAction.load(res.data))
 });
 
 function render(){

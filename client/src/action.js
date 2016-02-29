@@ -1,11 +1,31 @@
+let Data = require('./data')
 
 var TreeAction = {
 
-	create : function(node_content, id){
+	createAsync : function(content, parent_id, store){
+		var Action = this;
+
+		Data.add({
+			content, 
+			parent_id
+		}, (res) => {
+			if(res.succ) {
+				store.dispatch( this.create( res.data, parent_id ) )
+			} else {
+				// store.dispatch(this.error())
+			}
+		});
+
+		return {
+			type : 'loading'
+	    };
+	},
+
+	create : function(node, parent_id){
 		return {
 			type : 'create',
-			content : node_content,
-			id : id
+			node : node,
+			parent_id : parent_id
 	    };
 	},
 
@@ -26,7 +46,7 @@ var TreeAction = {
 	load : function(data){
 		return {
 			type : 'load',
-			data
+			data : data
 		}
 	}
 }

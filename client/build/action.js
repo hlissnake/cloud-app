@@ -1,32 +1,56 @@
+'use strict';
+
+var Data = require('./data');
 
 var TreeAction = {
 
-	create: function (node_content, id) {
+	createAsync: function createAsync(content, parent_id, store) {
+		var _this = this;
+
+		var Action = this;
+
+		Data.add({
+			content: content,
+			parent_id: parent_id
+		}, function (res) {
+			if (res.succ) {
+				store.dispatch(_this.create(res.data, parent_id));
+			} else {
+				// store.dispatch(this.error())
+			}
+		});
+
 		return {
-			type: 'create',
-			content: node_content,
-			id: id
+			type: 'loading'
 		};
 	},
 
-	delete: function (id) {
+	create: function create(node, parent_id) {
+		return {
+			type: 'create',
+			node: node,
+			parent_id: parent_id
+		};
+	},
+
+	delete: function _delete(id) {
 		return {
 			type: 'delete',
 			id: id
 		};
 	},
 
-	search: function (text) {
+	search: function search(text) {
 		return {
 			type: 'search',
 			text: text
 		};
 	},
 
-	load: function (data) {
+	load: function load(data) {
 		return {
 			type: 'load',
-			data
+			data: data
 		};
 	}
 };

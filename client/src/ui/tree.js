@@ -4,7 +4,10 @@ var Immutable = require('immutable');
 var Tree = React.createClass({
 
 	propTypes : {
-		checked : React.PropTypes.bool
+		checked : React.PropTypes.bool.isRequired,
+		node : React.PropTypes.array.isRequired,
+		addNode : React.PropTypes.func.isRequired,
+		deleteNode : React.PropTypes.func.isRequired
 	},
 
 	getDefaultProps : function(){
@@ -64,7 +67,7 @@ var Tree = React.createClass({
 		e.stopPropagation();
 		var text = prompt("Please enter the new node's value");
 		if(text) {
-			this.props.addNode(text, this.props.node.get('id'));
+			this.props.addNode(text, this.props.node.get('_id'));
 		}
 	},
 
@@ -72,7 +75,7 @@ var Tree = React.createClass({
 		e.stopPropagation();
 		var result = confirm("Do you really want to delete this node?");
 		if(result) {
-			this.props.deleteNode(this.props.node.get('id'));
+			this.props.deleteNode(this.props.node.get('_id'));
 		}
 	},
 
@@ -108,7 +111,7 @@ var Tree = React.createClass({
 			    </div>
 
 			    { hasChildren && isOpen ? 
-			    	<ul className="tree-item-children" key={this.props.node.get('id')}>
+			    	<ul className="tree-item-children" key={this.props.node.get('_id')}>
 					{
 						childrenNodes.map(function(node, i){
 							return (
@@ -116,7 +119,7 @@ var Tree = React.createClass({
 									checked={this.childrenCheck} 
 									addNode={this.props.addNode} 
 									deleteNode={this.props.deleteNode}
-									key={node.id} ></Tree>
+									key={node._id} ></Tree>
 							)
 						}.bind(this))
 					}

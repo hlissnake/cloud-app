@@ -17,7 +17,7 @@ function onError(err){
 gulp.task('js', function () {
   return gulp.src(clientRoot + 'src/**/*.js')
     .pipe(babel({
-      presets: ['react']
+      presets: ['react', 'es2015']
     }))
     // .pipe(react())      // complie React JSX template
     .on('error', onError)

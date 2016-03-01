@@ -86,6 +86,7 @@ var TreeReducer = function TreeReducer(state, action) {
 			if (action.parent_id == 0) {
 				state[state.length] = {
 					content: action.node.content,
+					_id: action.node._id,
 					checkable: true
 				};
 			} else {
@@ -104,10 +105,8 @@ var TreeReducer = function TreeReducer(state, action) {
 					};
 
 					if (parentNode.childrenNodes) {
-						newNode._id = parentNode._id + parentNode.childrenNodes.length;
 						parentNode.childrenNodes.push(newNode);
 					} else {
-						newNode._id = parentNode._id + 0;
 						parentNode.childrenNodes = [newNode];
 					}
 				}

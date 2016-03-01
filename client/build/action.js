@@ -36,7 +36,7 @@ var TreeAction = {
 	delete: function _delete(id) {
 		return {
 			type: 'delete',
-			id: id
+			_id: id
 		};
 	},
 

@@ -25458,7 +25458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		propTypes: {
 			checked: React.PropTypes.bool.isRequired,
-			node: React.PropTypes.array.isRequired,
+			node: React.PropTypes.object.isRequired,
 			addNode: React.PropTypes.func.isRequired,
 			deleteNode: React.PropTypes.func.isRequired
 		},
@@ -25638,7 +25638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		delete: function _delete(id) {
 			return {
 				type: 'delete',
-				id: id
+				_id: id
 			};
 		},
 
@@ -25664,83 +25664,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-
-	// var TreeData = [
-	// 	{
-	// 		content : 'JavaScript',
-	// 		id : 'aa',
-	// 		checkable : true,
-	// 		childrenNodes : [
-	// 			{
-	// 				content : 'HTML5',
-	// 				id : 'aaa',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'Librarys',
-	// 				id : 'aab',
-	// 				checkable : true,
-	// 				childrenNodes : [
-	// 					{
-	// 						content : 'React.js',
-	// 						id : 'aaba',
-	// 						checkable : true
-	// 					}, {
-	// 						content : 'AngularJS',
-	// 						id : 'aabb',
-	// 						checkable : true
-	// 					}, {
-	// 						content : 'Backbone.js',
-	// 						id : 'aabc',
-	// 						checkable : true
-	// 					}
-	// 				]
-	// 			}, {
-	// 				content : 'CSS3',
-	// 				id : 'aac',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'Canvas',
-	// 				id : 'aae',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'NPM',
-	// 				id : 'aaf',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'SASS',
-	// 				id : 'aag',
-	// 				checkable : true
-	// 			}
-	// 		]
-	// 	}, {
-	// 		content : 'Java',
-	// 		id : 'ab',
-	// 		checkable : true,
-	// 		childrenNodes : [
-	// 			{
-	// 				content : 'J2EE',
-	// 				id : 'aba',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'Struct',
-	// 				id : 'abb',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'Spring',
-	// 				id : 'abc',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'AOP',
-	// 				id : 'abd',
-	// 				checkable : true
-	// 			}, {
-	// 				content : 'JSP',
-	// 				id : 'abe',
-	// 				checkable : true
-	// 			}
-	// 		]
-	// 	}
-	// ]
 
 	var Ajax = __webpack_require__(173);
 
@@ -27534,6 +27457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (action.parent_id == 0) {
 					state[state.length] = {
 						content: action.node.content,
+						_id: action.node._id,
 						checkable: true
 					};
 				} else {
@@ -27552,10 +27476,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						};
 
 						if (parentNode.childrenNodes) {
-							newNode._id = parentNode._id + parentNode.childrenNodes.length;
 							parentNode.childrenNodes.push(newNode);
 						} else {
-							newNode._id = parentNode._id + 0;
 							parentNode.childrenNodes = [newNode];
 						}
 					}

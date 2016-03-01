@@ -37,9 +37,10 @@ db.once('open', function() {
 });
 
 let TreeSchema = new mongoose.Schema({
+	parent : String,
 	content : String,
 	checkable : Boolean,
-	childrenNodes : Array
+	children : Array
 })
 
 let TreeModel = mongoose.model('Tree', TreeSchema);

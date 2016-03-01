@@ -32,7 +32,7 @@ var TreeAction = {
 	delete : function(id){
 		return {
 	    	type : 'delete',
-	    	id : id
+	    	_id : id
 	    };
 	},
 

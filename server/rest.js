@@ -4,6 +4,43 @@ let TreeModel = require('./model');
 let express = require('express');
 let route = express.Router();
 
+let AllTreeNodes = [];
+
+const generateTreeStructrue = (tree_nodes) => {
+	let nodes = [];
+	let res_nodes = [];
+
+	tree_nodes.forEach((node, i) => {
+		nodes[ nodes.length ] = node.toJSON();
+	})
+
+	// debugger
+	nodes.forEach((node, i) => {
+		if (node.parent === '0') {
+			res_nodes[res_nodes.length] = node;
+		}
+		node.childrenNodes = [];
+	})
+
+	// debugger
+	nodes.forEach((subNode, i) => {
+		if (subNode.parent !== '0') {
+
+			nodes.forEach((parentNode, i) => {
+				if( parentNode._id.toJSON() === subNode.parent ) {
+					parentNode.childrenNodes.push(subNode)
+					return false;
+				}
+			})
+		}
+	})
+	// debugger
+
+	AllTreeNodes = res_nodes;
+
+	return res_nodes;
+}
+
 // curl http://localhost:8001/api/vi/tree
 route.get('/tree', (req, res, next) => {
 
@@ -17,7 +54,7 @@ route.get('/tree', (req, res, next) => {
 				})
 			} else {
 				res.send({
-					data: tree_nodes,
+					data: generateTreeStructrue( tree_nodes ),
 					succ: true
 				});
 			}
@@ -25,6 +62,7 @@ route.get('/tree', (req, res, next) => {
 		})
 });
 
+// curl -H "Content-Type:application/json" http://localhost:8001/api/vi/tree/:id
 route.get('/tree/:id', (req, res, next) => {
 
 	console.log('retrive ' + req.params.id + ' tree data')
@@ -60,9 +98,10 @@ route.put('/tree/add', (req, res, next) => {
 	const params = req.body; console.log(params.content, params.parent_id);
 
 	TreeModel.create({
+		parent : params.parent_id,
 		content : params.content,
 		checkable : params.checkable || true,
-		childrenNodes : []
+		children : []
 	}, (err, tree_node) => {
 		if(err) {
 			res.send({
@@ -72,12 +111,13 @@ route.put('/tree/add', (req, res, next) => {
 			TreeModel.update(
 				{ _id : params.parent_id },
 				{ $push : 
-					{ childrenNodes : tree_node._id }
+					{ children : tree_node._id }
 				},
 				() => {
-					console.log('updated parent node ', tree_node._id)
+					console.log('updated parent node ', tree_node.id)
 				}
 			)
+			debugger
 			res.send({
 				data: tree_node,
 				succ: true

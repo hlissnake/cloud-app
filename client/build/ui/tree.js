@@ -9,7 +9,7 @@ var Tree = React.createClass({
 
 	propTypes: {
 		checked: React.PropTypes.bool.isRequired,
-		node: React.PropTypes.array.isRequired,
+		node: React.PropTypes.object.isRequired,
 		addNode: React.PropTypes.func.isRequired,
 		deleteNode: React.PropTypes.func.isRequired
 	},
